@@ -50,6 +50,29 @@ app.get('/api/coins', async (req, res) => {
     res.status(status).json({ error: 'Failed to fetch data' });
   }
 });
+app.get('/api/b/for-you', async (req, res) => {
+  try {
+    console.log('Fetching for-you data...');
+    const apiUrl = 'https://frontend-api.pump.fun/coins/for-you?offset=0&limit=100&includeNsfw=false';
+    const apiResponse = await axios.get(apiUrl);
+    console.log('Received response status:', apiResponse.status); // Log the HTTP status code
+    console.log('Received response data:', apiResponse.data); // Log the response data
+
+    res.json(apiResponse.data);
+  } catch (error) {
+    console.error('Error fetching for-you data:', error.message);
+
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', error.response.data);
+    }
+
+    const status = error.response ? error.response.status : 500;
+    res.status(status).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
