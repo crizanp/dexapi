@@ -71,7 +71,25 @@ app.get('/api/b/for-you', async (req, res) => {
     res.status(status).json({ error: 'Internal Server Error' });
   }
 });
+// Proxy endpoint for "about-to-graduate" data
+app.get('/api/atg/about-to-end', async (req, res) => {
+  try {
+    // Extract query parameters from the incoming request
+    const queryString = new URLSearchParams(req.query).toString();
+    const apiUrl = `https://advanced-api.pump.fun/coins/about-to-graduate?${queryString}`;
 
+    // Fetch data from the original API
+    const apiResponse = await axios.get(apiUrl);
+
+    // Respond with the fetched data
+    res.json(apiResponse.data);
+  } catch (error) {
+    console.error('Error fetching about-to-graduate data:', error.message);
+
+    const status = error.response ? error.response.status : 500;
+    res.status(status).json({ error: 'Failed to fetch data' });
+  }
+});
 
 
 // Start the server
